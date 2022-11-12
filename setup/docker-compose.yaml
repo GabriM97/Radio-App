@@ -1,0 +1,19 @@
+version: '3.9'
+services:
+  website:
+    build:
+      context: ../
+      dockerfile: setup/Dockerfile
+    image: radioco-app
+    volumes:
+      - ../:/app
+    ports:
+      - "8080:80"
+  database:
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: radio
+      MYSQL_ROOT_PASSWORD: radio.co
