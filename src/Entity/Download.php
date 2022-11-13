@@ -14,7 +14,7 @@ class Download
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $timestamp = null;
+    private ?\DateTimeImmutable $datetime = null;
 
     #[ORM\ManyToOne(inversedBy: 'downloads')]
     #[ORM\JoinColumn(nullable: false)]
@@ -25,14 +25,14 @@ class Download
         return $this->id;
     }
 
-    public function getTimestamp(): ?\DateTimeImmutable
+    public function getDatetime(): ?\DateTimeImmutable
     {
-        return $this->timestamp;
+        return $this->datetime;
     }
 
-    public function setTimestamp(\DateTimeImmutable $timestamp): self
+    public function setDatetime(\DateTimeImmutable $datetime): self
     {
-        $this->timestamp = $timestamp;
+        $this->datetime = $datetime;
 
         return $this;
     }
