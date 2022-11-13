@@ -24,7 +24,7 @@ class UserController extends AbstractController
 
         $repository->save($user, true);
 
-        return $this->redirectToRoute('api_user', ['id' => $user->getId()]);
+        return $this->json(['id' => $user->getId()]);
     }
 
     #[Route('/user/{id}', name: 'user', methods: ['GET', 'HEAD'])]
