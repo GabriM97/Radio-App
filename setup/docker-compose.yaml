@@ -1,19 +1,26 @@
 version: '3.9'
 services:
+
   website:
     build:
       context: ../
       dockerfile: setup/Dockerfile
     image: radioco-app
+    container_name: radioco-app
     volumes:
       - ../:/app
     ports:
       - "8080:80"
+  
   database:
     image: mysql:8.0
+    container_name: radioco-mysql
     restart: always
     ports:
       - "3306:3306"
     environment:
+      MYSQL_ROOT_PASSWORD: radioco
       MYSQL_DATABASE: radio
-      MYSQL_ROOT_PASSWORD: radio.co
+      MYSQL_USER: radio
+      MYSQL_PASSWORD: radio
+      
