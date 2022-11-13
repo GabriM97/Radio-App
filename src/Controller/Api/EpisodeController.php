@@ -2,15 +2,15 @@
 
 namespace App\Controller\Api;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use App\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api', name: 'api_')]
 class EpisodeController extends AbstractController
 {
     #[Route('/episode/{id}/stats', name: 'episode_stats', methods: ['GET', 'HEAD'], requirements: ['page' => '\d+'])]
-    public function getStats(int $id): Response
+    public function getStats(int $id): JsonResponse
     {
         return $this->json([
             'stats' => [
