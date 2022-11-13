@@ -16,6 +16,10 @@ class Download
     #[ORM\Column]
     private ?\DateTimeImmutable $timestamp = null;
 
+    #[ORM\ManyToOne(inversedBy: 'downloads')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Episode $episode = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -29,6 +33,18 @@ class Download
     public function setTimestamp(\DateTimeImmutable $timestamp): self
     {
         $this->timestamp = $timestamp;
+
+        return $this;
+    }
+
+    public function getEpisode(): ?Episode
+    {
+        return $this->episode;
+    }
+
+    public function setEpisode(?Episode $episode): self
+    {
+        $this->episode = $episode;
 
         return $this;
     }

@@ -28,9 +28,13 @@ class Episode
     #[ORM\JoinColumn(nullable: false)]
     private ?Podcast $podcast = null;
 
+    #[ORM\OneToMany(mappedBy: 'episode', targetEntity: Download::class, orphanRemoval: true)]
+    private Collection $downloads;
+
     public function __construct()
     {
         $this->hosts = new ArrayCollection();
+        $this->downloads = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -97,6 +101,36 @@ class Episode
     public function setPodcast(?Podcast $podcast): self
     {
         $this->podcast = $podcast;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Download>
+     */
+    public function getDownloads(): Collection
+    {
+        return $this->downloads;
+    }
+
+    public function addDownload(Download $download): self
+    {
+        if (!$this->downloads->contains($download)) {
+            $this->downloads->add($download);
+            $download->setEpisode($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDownload(Download $download): self
+    {
+        if ($this->downloads->removeElement($download)) {
+            // set the owning side to null (unless already changed)
+            if ($download->getEpisode() === $this) {
+                $download->setEpisode(null);
+            }
+        }
 
         return $this;
     }
