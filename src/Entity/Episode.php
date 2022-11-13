@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EpisodeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EpisodeRepository::class)]
@@ -18,6 +20,14 @@ class Episode
 
     #[ORM\Column(length: 255)]
     private ?string $topic = null;
+
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'episodes')]
+    private Collection $hosts;
+
+    public function __construct()
+    {
+        $this->hosts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -44,6 +54,33 @@ class Episode
     public function setTopic(string $topic): self
     {
         $this->topic = $topic;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getHosts(): Collection
+    {
+        return $this->hosts;
+    }
+
+    public function addHost(User $host): self
+    {
+        if (!$this->hosts->contains($host)) {
+            $this->hosts->add($host);
+            $host->addEpisode($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHost(User $host): self
+    {
+        if ($this->hosts->removeElement($host)) {
+            $host->removeEpisode($this);
+        }
 
         return $this;
     }
