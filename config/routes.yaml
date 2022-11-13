@@ -1,7 +1,3 @@
 controllers:
     resource: ../src/Controller/
     type: attribute
-
-webhook:
-    path: /webhook
-    controller: App\Controller\WebhookController::index
