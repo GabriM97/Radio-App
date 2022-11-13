@@ -1,6 +1,6 @@
 FROM php:8.1-apache as setup
 
-RUN docker-php-ext-install mysqli && a2enmod rewrite
+RUN docker-php-ext-install mysqli pdo_mysql && a2enmod rewrite
 
 ENV APACHE_DOCUMENT_ROOT /app/public
 
