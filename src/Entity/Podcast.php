@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PodcastRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PodcastRepository::class)]
@@ -18,6 +20,14 @@ class Podcast
 
     #[ORM\Column(length: 255)]
     private ?string $type = null;
+
+    #[ORM\OneToMany(mappedBy: 'podcast', targetEntity: Episode::class, orphanRemoval: true)]
+    private Collection $episodes;
+
+    public function __construct()
+    {
+        $this->episodes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -44,6 +54,36 @@ class Podcast
     public function setType(string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Episode>
+     */
+    public function getEpisodes(): Collection
+    {
+        return $this->episodes;
+    }
+
+    public function addEpisode(Episode $episode): self
+    {
+        if (!$this->episodes->contains($episode)) {
+            $this->episodes->add($episode);
+            $episode->setPodcast($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEpisode(Episode $episode): self
+    {
+        if ($this->episodes->removeElement($episode)) {
+            // set the owning side to null (unless already changed)
+            if ($episode->getPodcast() === $this) {
+                $episode->setPodcast(null);
+            }
+        }
 
         return $this;
     }

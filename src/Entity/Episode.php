@@ -24,6 +24,10 @@ class Episode
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'episodes')]
     private Collection $hosts;
 
+    #[ORM\ManyToOne(inversedBy: 'episodes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Podcast $podcast = null;
+
     public function __construct()
     {
         $this->hosts = new ArrayCollection();
@@ -81,6 +85,18 @@ class Episode
         if ($this->hosts->removeElement($host)) {
             $host->removeEpisode($this);
         }
+
+        return $this;
+    }
+
+    public function getPodcast(): ?Podcast
+    {
+        return $this->podcast;
+    }
+
+    public function setPodcast(?Podcast $podcast): self
+    {
+        $this->podcast = $podcast;
 
         return $this;
     }
