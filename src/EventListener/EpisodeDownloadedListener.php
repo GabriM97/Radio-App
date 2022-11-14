@@ -31,6 +31,8 @@ class EpisodeDownloadedListener
 
         $this->downloadRepository->save($download, true);
 
-        $event->getResponse()->setContent(json_encode(['id' => $download->getId()]));
+        $response = $event->getResponse();
+        $response->setContent(json_encode(['id' => $download->getId()]));
+        // $response->headers->set('Content-Type', 'application/json');
     }
 }
