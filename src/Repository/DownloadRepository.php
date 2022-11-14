@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Download;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,20 @@ class DownloadRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getDownloadsBetweenDatesByEpisode(
+        int $episodeId,
+        DateTimeImmutable $fromDate,
+        DateTimeImmutable $toDate
+    ) {
+        return 
+            $this->createQueryBuilder('d')
+            ->andWhere('d.episode = :id')->setParameter('id', $episodeId)
+            ->andWhere('d.datetime >= :from_date')->setParameter('from_date', $fromDate)
+            ->andWhere('d.datetime <= :to_date')->setParameter('to_date', $toDate)
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**
