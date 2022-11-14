@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Controller\AbstractController;
+use App\Entity\Episode;
 use App\Entity\Podcast;
 use App\Repository\PodcastRepository;
 use App\Repository\UserRepository;
@@ -40,8 +41,11 @@ class PodcastController extends AbstractController
             'id' => $podcast->getId(),
             'name' => $podcast->getName(),
             'type' => $podcast->getType(),
-            'creator_email' => $podcast->getCreator()->getEmail(),
-            'episodes' => $podcast->getEpisodes()->toArray(),
+            'creator_id' => $podcast->getCreator()->getId(),
+            'episodes' => array_map(
+                fn(Episode $episode) => ['id' => $episode->getId()], 
+                $podcast->getEpisodes()->toArray()
+            ),
         ]);
     }
 }
