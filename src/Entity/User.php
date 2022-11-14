@@ -26,9 +26,13 @@ class User
     #[ORM\ManyToMany(targetEntity: Episode::class, inversedBy: 'hosts')]
     private Collection $episodes;
 
+    #[ORM\OneToMany(mappedBy: 'creator', targetEntity: Podcast::class)]
+    private Collection $createdPodcasts;
+
     public function __construct()
     {
         $this->episodes = new ArrayCollection();
+        $this->createdPodcasts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -80,6 +84,36 @@ class User
     public function removeEpisode(Episode $episode): self
     {
         $this->episodes->removeElement($episode);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Podcast>
+     */
+    public function getCreatedPodcasts(): Collection
+    {
+        return $this->createdPodcasts;
+    }
+
+    public function addCreatedPodcast(Podcast $createdPodcast): self
+    {
+        if (!$this->createdPodcasts->contains($createdPodcast)) {
+            $this->createdPodcasts->add($createdPodcast);
+            $createdPodcast->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreatedPodcast(Podcast $createdPodcast): self
+    {
+        if ($this->createdPodcasts->removeElement($createdPodcast)) {
+            // set the owning side to null (unless already changed)
+            if ($createdPodcast->getCreator() === $this) {
+                $createdPodcast->setCreator(null);
+            }
+        }
 
         return $this;
     }

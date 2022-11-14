@@ -24,6 +24,10 @@ class Podcast
     #[ORM\OneToMany(mappedBy: 'podcast', targetEntity: Episode::class, orphanRemoval: true)]
     private Collection $episodes;
 
+    #[ORM\ManyToOne(inversedBy: 'createdPodcasts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $creator = null;
+
     public function __construct()
     {
         $this->episodes = new ArrayCollection();
@@ -84,6 +88,18 @@ class Podcast
                 $episode->setPodcast(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreator(): ?User
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?User $creator): self
+    {
+        $this->creator = $creator;
 
         return $this;
     }
