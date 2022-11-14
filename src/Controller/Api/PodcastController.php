@@ -43,7 +43,7 @@ class PodcastController extends AbstractController
             'type' => $podcast->getType(),
             'creator_id' => $podcast->getCreator()->getId(),
             'episodes' => array_map(
-                fn(Episode $episode) => ['id' => $episode->getId()], 
+                fn(Episode $episode) => ['id' => $episode->getId(), 'title' => $episode->getTitle()], 
                 $podcast->getEpisodes()->toArray()
             ),
         ]);

@@ -7,7 +7,6 @@ use App\Event\WebhookEvent;
 use App\Repository\DownloadRepository;
 use App\Repository\EpisodeRepository;
 use DateTimeImmutable;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,5 +30,7 @@ class EpisodeDownloadedListener
         $download->setDatetime(new DateTimeImmutable());    // or $event->getRequestData()['occurred_at']
 
         $this->downloadRepository->save($download, true);
+
+        $event->getResponse()->setContent(json_encode(['id' => $download->getId()]));
     }
 }

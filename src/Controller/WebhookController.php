@@ -16,13 +16,13 @@ class WebhookController extends AbstractController
      * Webhooks' requests entrypoint
      */
     #[Route('/webhook', name: 'webhook', methods: ['POST'], format: 'json')]
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): Response
     {
         $requestData = $this->getRequestData($request);
 
         $event = new WebhookEvent($requestData);
         $this->dispatcher->dispatch($event, $requestData['type']);
 
-        return $this->json(['message' => Response::HTTP_OK]);
+        return $event->getResponse();
     }
 }

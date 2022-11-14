@@ -51,7 +51,7 @@ class EpisodeController extends AbstractController
             'topic' => $episode->getTopic(),
             'podcast_id' => $episode->getPodcast()->getId(),
             'hosts' => array_map(
-                fn(User $host) => ['id' => $host->getId()], 
+                fn(User $host) => ['id' => $host->getId(), 'email' => $host->getEmail()], 
                 $episode->getHosts()->toArray()
             ),
             'downloads' => $episode->getDownloads()->count(),
