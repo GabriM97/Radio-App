@@ -3,11 +3,14 @@
 namespace App\Controller\Api;
 
 use App\Controller\AbstractController;
+use App\Entity\Download;
 use App\Entity\Episode;
 use App\Entity\User;
+use App\Repository\DownloadRepository;
 use App\Repository\EpisodeRepository;
 use App\Repository\PodcastRepository;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -51,7 +54,22 @@ class EpisodeController extends AbstractController
                 fn(User $host) => ['id' => $host->getId()], 
                 $episode->getHosts()->toArray()
             ),
+            'downloads' => $episode->getDownloads()->count(),
         ]);
+    }
+
+    #[Route('/episode/{id}/download', name: 'episode_download', methods: ['GET', 'HEAD'])]
+    public function download(int $id, EpisodeRepository $episodeRepository, DownloadRepository $downloadRepository): JsonResponse
+    {        
+        $episode = $episodeRepository->find($id);
+
+        $download = new Download();
+        $download->setEpisode($episode);
+        $download->setDatetime(new DateTimeImmutable());
+
+        $downloadRepository->save($download, true);
+
+        return $this->json(['id' => $download->getId()]);
     }
 
     // #[Route('/episode/{id}/stats', name: 'episode_stats', methods: ['GET', 'HEAD'], requirements: ['page' => '\d+'])]
