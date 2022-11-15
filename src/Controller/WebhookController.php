@@ -5,11 +5,9 @@ namespace App\Controller;
 use App\Controller\AbstractController;
 use App\Event\WebhookEvent;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-// Not required but should add the annotation: #[Route('/api', name: 'api_')]
 class WebhookController extends AbstractController
 {
     /**
