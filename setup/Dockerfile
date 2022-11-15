@@ -13,7 +13,8 @@ WORKDIR /app/
 
 COPY ./ ./
 
-# - - - - - - - - - - - - Super slow for no reason...
+# - - - - - - - - - - - - 
+# commented out because composer was taking ages to install. Will investigate why later.
 
 # FROM composer:2.4 as install
 
