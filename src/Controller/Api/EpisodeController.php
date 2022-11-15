@@ -21,7 +21,15 @@ class EpisodeController extends AbstractController
 {
     use DateTrait;
 
-    #[Route('/episode/create', name: 'episode_create', methods: ['POST'])]
+    /**
+     * Creates and stores a new Episode.
+     *
+     * @param Request $request
+     * @param EpisodeRepository $episodeRepository
+     * 
+     * @return JsonResponse
+     */
+    #[Route('/episode/create', name: 'episode_create', methods: ['POST'])]    
     public function store(
         Request $request, 
         EpisodeRepository $episodeRepository, 
@@ -30,6 +38,7 @@ class EpisodeController extends AbstractController
     ): JsonResponse {
         $data = $this->getRequestData($request);
         
+        // create the episode
         $episode = new Episode();
         $episode->setTitle($data['title']);
         $episode->setTopic($data['topic']);
@@ -38,6 +47,7 @@ class EpisodeController extends AbstractController
             $episode->addHost($userRepository->find($host['id']));
         }
 
+        // store the episode
         $episodeRepository->save($episode, true);
 
         return $this->json(['id' => $episode->getId()]);
@@ -102,6 +112,16 @@ class EpisodeController extends AbstractController
         ));
     }
 
+    /**
+     * Retrieves the episode stats between a defined range of dates,
+     * groups them by day returning the amount of downloads per day.
+     * 
+     * @param int $id
+     * @param Request $request
+     * @param DownloadRepository $donwloadRepository
+     *
+     * @return JsonResponse
+     */
     #[Route('/episode/{id}/stats/daily', name: 'episode_stats_daily', methods: ['GET', 'HEAD'])]
     public function getStatsDaily(
         int $id,
@@ -111,14 +131,18 @@ class EpisodeController extends AbstractController
 
         // $episode = $episodeRepository->find($id);
 
+        // get query parameters
         $lastDays = $request->query->get('last_days', 7);
         $fromDate = $request->query->get('from_date', null);
         $toDate = $request->query->get('to_date', null);
 
+        // resolve what's the date range we will use
         list($fromDate, $toDate) = $this->getDatesRange($lastDays, $fromDate, $toDate);
 
+        // retrieve all the downloads between the defined dates
         $downloads = $donwloadRepository->getDownloadsBetweenDatesByEpisode($id, $fromDate, $toDate);
 
+        // group stats by day
         $dailyStats = $this->groupDataByDay(array_map(
             fn(Download $download) => [
                 'id' => $download->getId(),
@@ -127,6 +151,7 @@ class EpisodeController extends AbstractController
             $downloads
         ));
 
+        // only set the amount of downloads per day in the response
         return $this->json(array_map(
             fn(array $dailyDownloads) => count($dailyDownloads),
             $dailyStats

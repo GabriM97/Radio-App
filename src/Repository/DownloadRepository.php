@@ -40,11 +40,20 @@ class DownloadRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Retrieves all the downloads between the range of dates passed.
+     * 
+     * @param int $episodeId
+     * @param DateTimeImmutable $fromDate
+     * @param DateTimeImmutable $toDate
+     * 
+     * @return array
+     */
     public function getDownloadsBetweenDatesByEpisode(
         int $episodeId,
         DateTimeImmutable $fromDate,
         DateTimeImmutable $toDate
-    ) {
+    ): array {
         return 
             $this->createQueryBuilder('d')
             ->andWhere('d.episode = :id')->setParameter('id', $episodeId)

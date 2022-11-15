@@ -13,7 +13,12 @@ abstract class AbstractController extends SymfonyController
     }
 
     /**
-     * Returns the Request Data
+     * Returns the data contained by the request.
+     * Depending on the content type, the data could be stored in different places.
+     * 
+     * @param Request $request
+     *
+     * @return array
      */
     public static function getRequestData(Request $request): array
     {
