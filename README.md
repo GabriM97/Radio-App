@@ -1,4 +1,4 @@
-# Radio.co app
+# Radio App
 ## Build and Run the application
 
 ### Requirements

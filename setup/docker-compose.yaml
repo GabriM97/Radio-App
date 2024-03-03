@@ -3,12 +3,12 @@ services:
 
   database:
     image: mysql:8.0
-    container_name: radioco-mysql
+    container_name: radio-mysql
     restart: always
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: radioco
+      MYSQL_ROOT_PASSWORD: radio
       MYSQL_DATABASE: radio
       MYSQL_USER: radio
       MYSQL_PASSWORD: radio
@@ -17,8 +17,8 @@ services:
     build:
       context: ../
       dockerfile: setup/Dockerfile
-    image: radioco-app
-    container_name: radioco-app
+    image: radio-app
+    container_name: radio-app
     volumes:
       - ../:/app
     ports:
